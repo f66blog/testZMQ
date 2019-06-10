@@ -136,7 +136,7 @@ module f08_zmq
     interface
         subroutine zmq_version(major_, minor_, patch_) bind(c)
             use, intrinsic :: iso_c_binding
-            integer(c_int), value :: major_, minor_, patch_
+            type(c_ptr), value :: major_, minor_, patch_
         end subroutine zmq_version 
     end interface
    
