@@ -11,15 +11,16 @@ program pub
 
     context   = zmq_ctx_new()
     publisher = zmq_socket(context, ZMQ_PUB)
-    txt = 'tcp://*:5556'   !//a6char(0)
+    txt = 'tcp://127.0.0.1:5555'   
     ierr = zmq_bind(publisher, c_loc(txt))
     if (ierr /= 0) stop 'zmq_bind'
 
-    do 
-        call random_number(x)
-        ix = 1000000000 * x
-        write(buffer, '(g0)') ix !, achar(0)
-        print *, 'pub:', buffer(:len_trim(buffer)), ':'
-        ierr = zmq_send(publisher, c_loc(buffer), int(len_trim(buffer), c_size_t), 0_c_int)
-    end do
+    ierr = zmq_unbind(publisher, c_loc(txt))
+    print *, 'unbind', ierr, zmq_strerror(zmq_errno())
+    
+    ierr = zmq_close(publisher)
+    print *, 'closed', ierr, zmq_strerror(zmq_errno())
+
+    ierr = zmq_ctx_shutdown(context)
+    print *, 'shutdown', ierr, zmq_strerror(zmq_errno())
 end program pub

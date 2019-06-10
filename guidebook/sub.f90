@@ -1,10 +1,10 @@
-program test
+program sub
     use, intrinsic :: iso_c_binding
     use :: f08_zmq
     implicit none
     type(c_ptr) :: context, subscriber
     character(:), allocatable, target :: txt
-    character( 80), target :: filter 
+    character( 80), target :: filter, got 
     character(255), target :: buffer    
     integer(c_int) :: ierr, isize
 
@@ -26,4 +26,4 @@ program test
         isize = zmq_recv(subscriber, c_loc(buffer), 255_c_size_t, 0_c_int)
         print *, buffer(:isize)        
     end do
-end program test
+end program sub
