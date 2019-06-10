@@ -564,6 +564,14 @@ end type zmq_msg_t
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
        end function zmq_close
+       
+       integer(c_int) function zmq_setsockopt(s_, option_, optval_, optvallen_) bind(c)
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           integer(c_int), value :: option_
+           type(c_ptr), value :: optval_
+           integer(c_size_t), value :: optvallen_
+       end function zmq_setsockopt 
          
        integer(c_int) function zmq_bind(s_, addr_) bind(c)
            use, intrinsic :: iso_c_binding
