@@ -9,8 +9,15 @@ program pub
     real :: x
     integer :: ix
 
-    context   = zmq_ctx_new()
+    context = zmq_ctx_new()
+
     publisher = zmq_socket(context, ZMQ_PUB)
+    txt = 'tcp://127.0.0.1:9999'
+    ierr = zmq_socket_monitor(publisher, c_loc(txt), 0_c_int)
+    print *, 'socket monitor', ierr, zmq_strerror(zmq_errno())
+
+
+
     txt = 'tcp://127.0.0.1:5555'   
     ierr = zmq_bind(publisher, c_loc(txt))
     if (ierr /= 0) stop 'zmq_bind'

@@ -217,7 +217,6 @@ module f08_zmq
             integer(c_int), value :: option_
         end function zmq_ctx_get
     end interface
-    
 !
 !/*  Old (legacy) API                                                          */
 !ZMQ_EXPORT void *zmq_init (int io_threads_);
@@ -234,7 +233,6 @@ module f08_zmq
             type(c_ptr), value :: context_            
         end function zmq_term    
         
-        ! not working correctly....R1.6.8
         integer(c_int) function zmq_ctx_destroy(context_) bind(c)
             use, intrinsic :: iso_c_binding
             type(c_ptr), value :: context_
@@ -266,7 +264,7 @@ module f08_zmq
 !} zmq_msg_t;
 type, bind(c) :: zmq_msg_t
     character(c_char) :: text(64) 
-end type zmq_msg_t    
+    end type zmq_msg_t    
 
 !typedef void(zmq_free_fn) (void *data_, void *hint_);
 !
@@ -286,6 +284,9 @@ end type zmq_msg_t
 !ZMQ_EXPORT int zmq_msg_set (zmq_msg_t *msg_, int property_, int optval_);
 !ZMQ_EXPORT const char *zmq_msg_gets (const zmq_msg_t *msg_,
 !                                     const char *property_);
+!
+!   zmq_free_fn not used
+!    
     abstract interface
         subroutine zmq_free_fn(data_, hint_) bind(c)
             use, intrinsic :: iso_c_binding
@@ -509,34 +510,34 @@ end type zmq_msg_t
     integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_FAILED_NO_DETAIL = Z'0800'
     !/*  Handshake complete successfully with successful authentication (if        *
     ! *  enabled). Event value is unused.                                          */
-    integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_SUCCEEDED = Z'1000'
+    integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_SUCCEEDED        = Z'1000'
     !/*  Protocol errors between ZMTP peers or between server and ZAP handler.     *
     ! *  Event value is one of ZMQ_PROTOCOL_ERROR_*                                */
-    integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_FAILED_PROTOCOL = Z'2000'
+    integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_FAILED_PROTOCOL  = Z'2000'
     !/*  Failed authentication requests. Event value is the numeric ZAP status     *
     ! *  code, i.e. 300, 400 or 500.                                               */
-    integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_FAILED_AUTH = Z'4000'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_UNSPECIFIED = Z'10000000'
+    integer(c_int), parameter :: ZMQ_EVENT_HANDSHAKE_FAILED_AUTH            = Z'4000'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_UNSPECIFIED        = Z'10000000'
     integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_UNEXPECTED_COMMAND = Z'10000001'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_INVALID_SEQUENCE = Z'10000002'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_KEY_EXCHANGE = Z'10000003'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_INVALID_SEQUENCE   = Z'10000002'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_KEY_EXCHANGE       = Z'10000003'
     integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_UNSPECIFIED = Z'10000011'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_MESSAGE = Z'10000012'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_HELLO = Z'10000013'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_INITIATE = Z'10000014'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_ERROR = Z'10000015'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_READY = Z'10000016'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_WELCOME = Z'10000017'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_INVALID_METADATA = Z'10000018'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_MESSAGE     = Z'10000012'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_HELLO       = Z'10000013'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_INITIATE    = Z'10000014'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_ERROR       = Z'10000015'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_READY       = Z'10000016'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_WELCOME     = Z'10000017'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_INVALID_METADATA              = Z'10000018'
     !// the following two may be due to erroneous configuration of a peer
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_CRYPTOGRAPHIC = Z'11000001'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_CRYPTOGRAPHIC      = Z'11000001'
     integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZMTP_MECHANISM_MISMATCH = Z'11000002'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_UNSPECIFIED = Z'20000000'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_MALFORMED_REPLY = Z'20000001'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_BAD_REQUEST_ID = Z'20000002'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_BAD_VERSION = Z'20000003'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_UNSPECIFIED         = Z'20000000'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_MALFORMED_REPLY     = Z'20000001'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_BAD_REQUEST_ID      = Z'20000002'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_BAD_VERSION         = Z'20000003'
     integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_INVALID_STATUS_CODE = Z'20000004'
-    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_INVALID_METADATA = Z'20000005'
+    integer(c_int), parameter :: ZMQ_PROTOCOL_ERROR_ZAP_INVALID_METADATA    = Z'20000005'
 
 !ZMQ_EXPORT void *zmq_socket (void *, int type_);
 !ZMQ_EXPORT int zmq_close (void *s_);
@@ -572,7 +573,15 @@ end type zmq_msg_t
            type(c_ptr), value :: optval_
            integer(c_size_t), value :: optvallen_
        end function zmq_setsockopt 
-         
+
+       integer(c_int) function zmq_getsockopt(s_, option_, optval_, optvallen_) bind(c)
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           integer(c_int), value :: option_
+           type(c_ptr), value :: optval_
+           type(c_ptr), value :: optvallen_
+       end function zmq_getsockopt
+       
        integer(c_int) function zmq_bind(s_, addr_) bind(c)
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
@@ -585,6 +594,18 @@ end type zmq_msg_t
            type(c_ptr), value :: addr_        
        end function zmq_connect
         
+       integer(c_int) function zmq_unbind(s_, addr_) bind(c)
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           type(c_ptr), value :: addr_        
+       end function zmq_unbind
+
+       integer(c_int) function zmq_disconnect(s_, addr_) bind(c)
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           type(c_ptr), value :: addr_        
+       end function zmq_disconnect
+       
        integer(c_int) function zmq_send(s_, buf_, len_, flags_) bind(c)
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
@@ -601,8 +622,12 @@ end type zmq_msg_t
            integer(c_int), value :: flags_
        end function zmq_recv
        
-         
-        
+       integer(c_int) function zmq_socket_monitor(s_, addr_, events_) bind(c)
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_  
+           type(c_ptr), value :: addr_
+           integer(c_int), value :: events_
+       end function zmq_socket_monitor
     end interface
 
 !/******************************************************************************/
