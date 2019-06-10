@@ -570,6 +570,12 @@ end type zmq_msg_t
            type(c_ptr), value :: s_   
            type(c_ptr), value :: addr_        
        end function zmq_bind
+    
+       integer(c_int) function zmq_connect(s_, addr_) bind(c)
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           type(c_ptr), value :: addr_        
+       end function zmq_connect
         
        integer(c_int) function zmq_send(s_, buf_, len_, flags_) bind(c)
            use, intrinsic :: iso_c_binding
