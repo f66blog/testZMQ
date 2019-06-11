@@ -3,15 +3,13 @@ program sub
     use :: f08_zmq
     implicit none
     type(c_ptr) :: context, subscriber
-    character(:), allocatable, target :: txt
     character( 80), target :: filter, got 
     character(255), target :: buffer    
     integer(c_int) :: ierr, isize
 
     context    = zmq_ctx_new()
     subscriber = zmq_socket(context, ZMQ_SUB)
-    txt = 'tcp://localhost:5556'
-    ierr = zmq_connect(subscriber, c_loc(txt))
+    ierr = zmq_connect(subscriber, 'tcp://localhost:5556')
     if (ierr /= 0) then
         print *, 'zmq_connect', ierr, zmq_strerror(zmq_errno())
         stop 'zmq_connect'

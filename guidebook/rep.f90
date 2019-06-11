@@ -4,13 +4,11 @@ program rep
     implicit none
     type(c_ptr) :: context, responder
     integer(c_int) :: ierr
-    character(:), allocatable, target :: txt
     character(10), target :: buffer, word
 
     context = zmq_ctx_new()
     responder = zmq_socket(context, ZMQ_REP)
-    txt = 'tcp://*:5555'
-    ierr = zmq_bind(responder, c_loc(txt))  
+    ierr = zmq_bind(responder, 'tcp://*:5555')  
     if (ierr /= 0) stop 'zmq_bind'
     
     do 

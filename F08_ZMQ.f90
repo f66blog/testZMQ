@@ -123,7 +123,7 @@ module f08_zmq
 !/*  Resolves system errors and 0MQ errors to human-readable string.           */
 !ZMQ_EXPORT const char *zmq_strerror (int errnum_);
     interface
-        type(c_ptr) function zmq_strerror_c(errnum_) bind(c, name = 'zmq_strerror')
+        type(c_ptr) function zmq_strerror_c(errnum_) bind(c, name = 'zmq_strerror') result(res)
             use, intrinsic :: iso_c_binding
             integer(c_int), value :: errnum_
         end function zmq_strerror_c
@@ -264,7 +264,7 @@ module f08_zmq
 !} zmq_msg_t;
 type, bind(c) :: zmq_msg_t
     character(c_char) :: text(64) 
-    end type zmq_msg_t    
+end type zmq_msg_t    
 
 !typedef void(zmq_free_fn) (void *data_, void *hint_);
 !
@@ -389,12 +389,13 @@ type, bind(c) :: zmq_msg_t
             integer(c_int), value :: property_, optval_
         end function zmq_msg_set
         
-        type(c_ptr) function zmq_msg_gets(msg_, property_) bind(c)
+        ! character(c_char)
+        type(c_ptr) function zmq_msg_gets_c(msg_, property_) bind(c, name = 'zmq_msg_gets')
             use, intrinsic :: iso_c_binding
             import zmq_msg_t
             type(zmq_msg_t), intent(in) :: msg_
             type(c_ptr), value :: property_
-        end function zmq_msg_gets
+        end function zmq_msg_gets_c
     end interface
     
     
@@ -633,29 +634,29 @@ type, bind(c) :: zmq_msg_t
            type(c_ptr), value :: optvallen_
        end function zmq_getsockopt
        
-       integer(c_int) function zmq_bind(s_, addr_) bind(c)
+       integer(c_int) function zmq_bind_c(s_, addr_) bind(c, name = 'zmq_bind')
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
-           type(c_ptr), value :: addr_        
-       end function zmq_bind
+           character(c_char), intent(in) :: addr_(*)        
+       end function zmq_bind_c
     
-       integer(c_int) function zmq_connect(s_, addr_) bind(c)
+       integer(c_int) function zmq_connect_c(s_, addr_) bind(c, name = 'zmq_connect')
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
-           type(c_ptr), value :: addr_        
-       end function zmq_connect
+           character(c_char), intent(in) :: addr_(*)        
+       end function zmq_connect_c
         
-       integer(c_int) function zmq_unbind(s_, addr_) bind(c)
+       integer(c_int) function zmq_unbind_c(s_, addr_) bind(c, name = 'zmq_unbind')
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
-           type(c_ptr), value :: addr_        
-       end function zmq_unbind
+           character(c_char), intent(in) :: addr_(*)        
+       end function zmq_unbind_c
 
-       integer(c_int) function zmq_disconnect(s_, addr_) bind(c)
+       integer(c_int) function zmq_disconnect_c(s_, addr_) bind(c, name = 'zmq_disconnect')
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_   
-           type(c_ptr), value :: addr_        
-       end function zmq_disconnect
+           character(c_char), intent(in) :: addr_(*)        
+       end function zmq_disconnect_c
        
        integer(c_int) function zmq_send(s_, buf_, len_, flags_) bind(c)
            use, intrinsic :: iso_c_binding
@@ -673,12 +674,12 @@ type, bind(c) :: zmq_msg_t
            integer(c_int), value :: flags_
        end function zmq_recv
        
-       integer(c_int) function zmq_socket_monitor(s_, addr_, events_) bind(c)
+       integer(c_int) function zmq_socket_monitor_c(s_, addr_, events_) bind(c, name = 'zmq_socket_monitor')
            use, intrinsic :: iso_c_binding
            type(c_ptr), value :: s_  
-           type(c_ptr), value :: addr_
+           character(c_char), intent(in) :: addr_(*)        
            integer(c_int), value :: events_
-       end function zmq_socket_monitor
+       end function zmq_socket_monitor_c
     end interface
 
 !/******************************************************************************/
@@ -953,4 +954,55 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             call c_f_pointer(cptr, text)
             res = text(:index(text, achar(0)))
         end function zmq_strerror    
+
+        function zmq_msg_gets(msg_, property_) result(res)
+            type(zmq_msg_t), intent(in) :: msg_
+            type(c_ptr), value :: property_
+            character(:), allocatable :: res
+            type(c_ptr) :: cptr
+            character(len = 512), pointer :: text
+            
+            cptr = zmq_msg_gets_c(msg_, property_)
+            call c_f_pointer(cptr, text)
+            res = text(:index(text, achar(0)))
+        end function zmq_msg_gets
+    
+        integer(c_int) function zmq_bind(s_, addr_) 
+            use, intrinsic :: iso_c_binding
+            type(c_ptr), value :: s_   
+            character(*), intent(in) :: addr_
+            zmq_bind = zmq_bind_c(s_, transfer(addr_, ' ', len(addr_)))
+        end function zmq_bind
+    
+        integer(c_int) function zmq_connect(s_, addr_) 
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           character(*), intent(in) :: addr_
+           zmq_connect = zmq_connect_c(s_, transfer(addr_, ' ', len(addr_)))
+       end function zmq_connect
+        
+       integer(c_int) function zmq_unbind(s_, addr_) 
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           character(*), intent(in) :: addr_
+           zmq_unbind = zmq_unbind_c(s_, transfer(addr_, ' ', len(addr_)))
+       end function zmq_unbind
+
+       integer(c_int) function zmq_disconnect(s_, addr_) 
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_   
+           character(*), intent(in) :: addr_
+           zmq_disconnect = zmq_disconnect_c(s_, transfer(addr_, ' ', len(addr_)))
+       end function zmq_disconnect
+       
+       integer(c_int) function zmq_socket_monitor(s_, addr_, events_) 
+           use, intrinsic :: iso_c_binding
+           type(c_ptr), value :: s_  
+           character(*), intent(in) :: addr_        
+           integer(c_int), value :: events_
+           zmq_socket_monitor = zmq_socket_monitor_c(s_, transfer(addr_, ' ', len(addr_)) , events_)
+       end function zmq_socket_monitor
+        
+        
+        
     end module f08_zmq
