@@ -344,6 +344,57 @@ type, bind(c) :: zmq_msg_t
             import zmq_msg_t
             type(zmq_msg_t) :: msg_
         end function zmq_msg_close
+        
+        integer(c_int) function zmq_msg_move(dest_, src_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t) :: dest_, src_
+        end function zmq_msg_move
+        
+        integer(c_int) function zmq_msg_copy(dest_, src_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t) :: dest_, src_
+        end function zmq_msg_copy
+        
+        type(c_ptr) function zmq_msg_data(msg_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t) :: msg_
+        end function zmq_msg_data
+         
+        integer(c_size_t) function zmq_msg_size(msg_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t), intent(in) :: msg_
+        end function zmq_msg_size
+        
+        integer(c_int) function zmq_msg_more(msg_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t), intent(in) :: msg_
+        end function zmq_msg_more
+           
+        integer(c_int) function zmq_msg_get(msg_, property_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t), intent(in) :: msg_
+            integer(c_int), value :: property_
+        end function zmq_msg_get
+          
+        integer(c_int) function zmq_msg_set(msg_, property_, optval_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t), intent(in) :: msg_
+            integer(c_int), value :: property_, optval_
+        end function zmq_msg_set
+        
+        type(c_ptr) function zmq_msg_gets(msg_, property_) bind(c)
+            use, intrinsic :: iso_c_binding
+            import zmq_msg_t
+            type(zmq_msg_t), intent(in) :: msg_
+            type(c_ptr), value :: property_
+        end function zmq_msg_gets
     end interface
     
     
@@ -761,6 +812,9 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !ZMQ_EXPORT int zmq_timers_reset (void *timers, int timer_id);
 !ZMQ_EXPORT long zmq_timers_timeout (void *timers);
 !ZMQ_EXPORT int zmq_timers_execute (void *timers);
+
+
+
 !
 !/******************************************************************************/
 !/*  These functions are not documented by man pages -- use at your own risk.  */
