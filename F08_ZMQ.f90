@@ -1,4 +1,4 @@
-module f08_zmq
+module m_zmq
     use, intrinsic :: iso_c_binding
     implicit none
 !    /*  Version macros for compile-time API version detection                     */
@@ -80,34 +80,34 @@ module f08_zmq
 !#ifndef ENETRESET
 !#define ENETRESET (ZMQ_HAUSNUMERO + 18)
 !#endif
-    integer(c_int), parameter :: ENOTSUP = (ZMQ_HAUSNUMERO + 1)
-    integer(c_int), parameter :: EPROTONOSUPPORT = (ZMQ_HAUSNUMERO + 2)
-    integer(c_int), parameter :: ENOBUFS = (ZMQ_HAUSNUMERO + 3)
-    integer(c_int), parameter :: ENETDOWN = (ZMQ_HAUSNUMERO + 4)
-    integer(c_int), parameter :: EADDRINUSE = (ZMQ_HAUSNUMERO + 5)
-    integer(c_int), parameter :: EADDRNOTAVAIL = (ZMQ_HAUSNUMERO + 6)
-    integer(c_int), parameter :: ECONNREFUSED = (ZMQ_HAUSNUMERO + 7)
-    integer(c_int), parameter :: EINPROGRESS = (ZMQ_HAUSNUMERO + 8)
-    integer(c_int), parameter :: ENOTSOCK = (ZMQ_HAUSNUMERO + 9)
-    integer(c_int), parameter :: EMSGSIZE = (ZMQ_HAUSNUMERO + 10)
-    integer(c_int), parameter :: EAFNOSUPPORT = (ZMQ_HAUSNUMERO + 11)
-    integer(c_int), parameter :: ENETUNREACH = (ZMQ_HAUSNUMERO + 12)
-    integer(c_int), parameter :: ECONNABORTED = (ZMQ_HAUSNUMERO + 13)
-    integer(c_int), parameter :: ECONNRESET = (ZMQ_HAUSNUMERO + 14)
-    integer(c_int), parameter :: ENOTCONN = (ZMQ_HAUSNUMERO + 15)
-    integer(c_int), parameter :: ETIMEDOUT = (ZMQ_HAUSNUMERO + 16)
-    integer(c_int), parameter :: EHOSTUNREACH = (ZMQ_HAUSNUMERO + 17)
-    integer(c_int), parameter :: ENETRESET = (ZMQ_HAUSNUMERO + 18)
+    integer(c_int), parameter :: ENOTSUP         = (ZMQ_HAUSNUMERO +  1)
+    integer(c_int), parameter :: EPROTONOSUPPORT = (ZMQ_HAUSNUMERO +  2)
+    integer(c_int), parameter :: ENOBUFS         = (ZMQ_HAUSNUMERO +  3)
+    integer(c_int), parameter :: ENETDOWN        = (ZMQ_HAUSNUMERO +  4)
+    integer(c_int), parameter :: EADDRINUSE      = (ZMQ_HAUSNUMERO +  5)
+    integer(c_int), parameter :: EADDRNOTAVAIL   = (ZMQ_HAUSNUMERO +  6)
+    integer(c_int), parameter :: ECONNREFUSED    = (ZMQ_HAUSNUMERO +  7)
+    integer(c_int), parameter :: EINPROGRESS     = (ZMQ_HAUSNUMERO +  8)
+    integer(c_int), parameter :: ENOTSOCK        = (ZMQ_HAUSNUMERO +  9)
+    integer(c_int), parameter :: EMSGSIZE        = (ZMQ_HAUSNUMERO + 10)
+    integer(c_int), parameter :: EAFNOSUPPORT    = (ZMQ_HAUSNUMERO + 11)
+    integer(c_int), parameter :: ENETUNREACH     = (ZMQ_HAUSNUMERO + 12)
+    integer(c_int), parameter :: ECONNABORTED    = (ZMQ_HAUSNUMERO + 13)
+    integer(c_int), parameter :: ECONNRESET      = (ZMQ_HAUSNUMERO + 14)
+    integer(c_int), parameter :: ENOTCONN        = (ZMQ_HAUSNUMERO + 15)
+    integer(c_int), parameter :: ETIMEDOUT       = (ZMQ_HAUSNUMERO + 16)
+    integer(c_int), parameter :: EHOSTUNREACH    = (ZMQ_HAUSNUMERO + 17)
+    integer(c_int), parameter :: ENETRESET       = (ZMQ_HAUSNUMERO + 18)
 !
 !/*  Native 0MQ error codes.                                                   */
 !#define EFSM (ZMQ_HAUSNUMERO + 51)
 !#define ENOCOMPATPROTO (ZMQ_HAUSNUMERO + 52)
 !#define ETERM (ZMQ_HAUSNUMERO + 53)
 !#define EMTHREAD (ZMQ_HAUSNUMERO + 54)    
-    integer(c_int), parameter :: EFSM = (ZMQ_HAUSNUMERO + 51)
+    integer(c_int), parameter :: EFSM           = (ZMQ_HAUSNUMERO + 51)
     integer(c_int), parameter :: ENOCOMPATPROTO = (ZMQ_HAUSNUMERO + 52)
-    integer(c_int), parameter :: ETERM = (ZMQ_HAUSNUMERO + 53)
-    integer(c_int), parameter :: EMTHREAD = (ZMQ_HAUSNUMERO + 54)    
+    integer(c_int), parameter :: ETERM          = (ZMQ_HAUSNUMERO + 53)
+    integer(c_int), parameter :: EMTHREAD       = (ZMQ_HAUSNUMERO + 54)    
 
 !/*  This function retrieves the errno as it is known to 0MQ library. The goal */
 !/*  of this function is to make the code 100% portable, including where 0MQ   */
@@ -136,7 +136,7 @@ module f08_zmq
     interface
         subroutine zmq_version(major_, minor_, patch_) bind(c)
             use, intrinsic :: iso_c_binding
-            type(c_ptr), value :: major_, minor_, patch_
+            integer(c_int), intent(out) :: major_, minor_, patch_
         end subroutine zmq_version 
     end interface
    
@@ -156,16 +156,16 @@ module f08_zmq
 !#define ZMQ_THREAD_AFFINITY_CPU_REMOVE 8
 !#define ZMQ_THREAD_NAME_PREFIX 9
 
-    integer(c_int), parameter :: ZMQ_IO_THREADS = 1
-    integer(c_int), parameter :: ZMQ_MAX_SOCKETS = 2
-    integer(c_int), parameter :: ZMQ_SOCKET_LIMIT = 3
-    integer(c_int), parameter :: ZMQ_THREAD_PRIORITY = 3
+    integer(c_int), parameter :: ZMQ_IO_THREADS          = 1
+    integer(c_int), parameter :: ZMQ_MAX_SOCKETS         = 2
+    integer(c_int), parameter :: ZMQ_SOCKET_LIMIT        = 3
+    integer(c_int), parameter :: ZMQ_THREAD_PRIORITY     = 3
     integer(c_int), parameter :: ZMQ_THREAD_SCHED_POLICY = 4
-    integer(c_int), parameter :: ZMQ_MAX_MSGSZ = 5
-    integer(c_int), parameter :: ZMQ_MSG_T_SIZE = 6
-    integer(c_int), parameter :: ZMQ_THREAD_AFFINITY_CPU_ADD = 7
+    integer(c_int), parameter :: ZMQ_MAX_MSGSZ           = 5
+    integer(c_int), parameter :: ZMQ_MSG_T_SIZE          = 6
+    integer(c_int), parameter :: ZMQ_THREAD_AFFINITY_CPU_ADD    = 7
     integer(c_int), parameter :: ZMQ_THREAD_AFFINITY_CPU_REMOVE = 8
-    integer(c_int), parameter :: ZMQ_THREAD_NAME_PREFIX = 9
+    integer(c_int), parameter :: ZMQ_THREAD_NAME_PREFIX         = 9
 
 !
 !/*  Default for new contexts                                                  */
@@ -174,9 +174,9 @@ module f08_zmq
 !#define ZMQ_THREAD_PRIORITY_DFLT -1
 !#define ZMQ_THREAD_SCHED_POLICY_DFLT -1
 
-    integer(c_int), parameter :: ZMQ_IO_THREADS_DFLT = 1
-    integer(c_int), parameter :: ZMQ_MAX_SOCKETS_DFLT = 1023
-    integer(c_int), parameter :: ZMQ_THREAD_PRIORITY_DFLT = -1
+    integer(c_int), parameter :: ZMQ_IO_THREADS_DFLT          =  1
+    integer(c_int), parameter :: ZMQ_MAX_SOCKETS_DFLT       = 1023
+    integer(c_int), parameter :: ZMQ_THREAD_PRIORITY_DFLT     = -1
     integer(c_int), parameter :: ZMQ_THREAD_SCHED_POLICY_DFLT = -1   
     
 !ZMQ_EXPORT void *zmq_ctx_new (void);
@@ -264,7 +264,7 @@ module f08_zmq
 !} zmq_msg_t;
 type, bind(c) :: zmq_msg_t
     character(c_char) :: text(64) 
-    end type zmq_msg_t    
+end type zmq_msg_t    
 
 !typedef void(zmq_free_fn) (void *data_, void *hint_);
 !
@@ -291,7 +291,7 @@ type, bind(c) :: zmq_msg_t
         subroutine zmq_free_fn(data_, hint_) bind(c)
             use, intrinsic :: iso_c_binding
             import zmq_msg_t
-            type(c_ptr), value :: data_
+            type(*) :: data_
             type(c_ptr), value :: hint_
         end subroutine zmq_free_fn
     end interface
@@ -319,13 +319,14 @@ type, bind(c) :: zmq_msg_t
          !   integer(8), allocatable :: data_(:) ! O
             type(c_ptr), value :: data_         ! X
             integer(c_size_t), value :: size_
-            type(c_funptr), value :: ffn_            
+          !  type(c_funptr), value :: ffn_   
+            procedure(zmq_free_fn) :: ffn_  
             type(c_ptr), value :: hint_
         end function zmq_msg_init_data
         
         integer(c_int) function zmq_msg_send(msg_, s_, flags_) bind(c)
             use, intrinsic :: iso_c_binding
-            import zmq_msg_t, zmq_free_fn
+            import zmq_msg_t 
             type(zmq_msg_t) :: msg_
             type(c_ptr), value :: s_
             integer(c_int), value :: flags_
@@ -333,7 +334,7 @@ type, bind(c) :: zmq_msg_t
         
         integer(c_int) function zmq_msg_recv(msg_, s_, flags_) bind(c)
             use, intrinsic :: iso_c_binding
-            import zmq_msg_t, zmq_free_fn
+            import zmq_msg_t 
             type(zmq_msg_t) :: msg_
             type(c_ptr), value :: s_
             integer(c_int), value :: flags_
@@ -389,12 +390,12 @@ type, bind(c) :: zmq_msg_t
             integer(c_int), value :: property_, optval_
         end function zmq_msg_set
         
-        type(c_ptr) function zmq_msg_gets(msg_, property_) bind(c)
+        type(c_ptr) function zmq_msg_gets_c(msg_, property_) bind(c, name = 'zmq_msg_gets')
             use, intrinsic :: iso_c_binding
             import zmq_msg_t
             type(zmq_msg_t), intent(in) :: msg_
-            type(c_ptr), value :: property_
-        end function zmq_msg_gets
+            type(c_ptr)    , intent(in) :: property_
+        end function zmq_msg_gets_c
     end interface
     
     
@@ -630,7 +631,7 @@ type, bind(c) :: zmq_msg_t
            type(c_ptr), value :: s_   
            integer(c_int), value :: option_
            type(c_ptr), value :: optval_
-           type(c_ptr), value :: optvallen_
+           integer(c_size_t), value :: optvallen_
        end function zmq_getsockopt
        
        integer(c_int) function zmq_bind(s_, addr_) bind(c)
@@ -942,15 +943,198 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !
 !#endif // ZMQ_BUILD_DRAFT_API
 !
+    end module m_zmq
+    
+    
+    module f08_zmq
+        use m_zmq
+        implicit none
+        
+        type :: context_t
+            type(c_ptr) :: ctx
+            procedure(ctx_new), pointer :: new => ctx_new 
+        contains    
+            final :: ctx_destroy
+        end type context_t
+
+        type :: socket_t
+            type(c_ptr) :: skt
+            procedure(skt_new), pointer :: new => skt_new
+            procedure(skt_set), pointer :: set => skt_set
+            procedure(skt_get), pointer :: get => skt_get
+            procedure(skt_bind), pointer :: bind => skt_bind
+            procedure(skt_connect), pointer :: connect => skt_connect
+            procedure(skt_unbind), pointer :: unbind => skt_unbind
+            procedure(skt_disconnect), pointer :: disconnect => skt_disconnect
+            procedure(skt_send), pointer :: send => skt_send
+            procedure(skt_recv), pointer :: recv => skt_recv
+            procedure(skt_monitor), pointer :: monitor => skt_monitor
+        contains
+            final :: skt_close 
+        end type socket_t
     contains
+        subroutine ctx_new(ctx)
+            class(context_t), intent(in out) :: ctx
+            ctx%ctx = zmq_ctx_new()
+        end subroutine ctx_new
+        
+        subroutine ctx_destroy(ctx)
+             type(context_t), intent(in out) :: ctx
+             integer(c_int) :: ierr
+             ierr = zmq_ctx_destroy(ctx%ctx)
+             print *, 'zmq_ctx_destroy', ierr, zmq_strerror(zmq_errno())
+        end subroutine ctx_destroy
+        
+        subroutine skt_new(skt, ctx, type_)
+            class(socket_t), intent(in out) :: skt
+            type(context_t), intent(in) :: ctx
+            integer(c_int) , intent(in) :: type_
+            integer(c_int) :: ierr
+            
+            skt%skt = zmq_socket(ctx%ctx, type_)
+        end subroutine skt_new
+        
+        subroutine skt_close(skt)
+            type(socket_t), intent(in out) :: skt
+            integer(c_int) :: ierr
+            
+            ierr = zmq_close(skt%skt)
+            print *, 'zmq_close', ierr, zmq_strerror(zmq_errno())
+        end subroutine skt_close
+        
+        subroutine skt_set(skt, option_, optval_, optvallen_)
+            class(socket_t), intent(in out) :: skt
+            integer, intent(in) :: option_
+            type(*), intent(in), target :: optval_
+            integer, intent(in) :: optvallen_ ! c_size_t
+            integer(c_int) :: ierr
+            
+            ierr = zmq_setsockopt(skt%skt, int(option_, c_int), c_loc(optval_), int(optvallen_, c_size_t))
+            if (ierr /= 0) then 
+                print *, 'zmq_set', ierr, zmq_strerror(zmq_errno())
+                stop
+            end if
+        end subroutine skt_set
+        
+        subroutine skt_get(skt, option_, optval_, optvallen_)
+            class(socket_t), intent(in out) :: skt
+            integer, intent(in) :: option_
+            type(*), intent(in), target :: optval_
+            integer, intent(in) :: optvallen_ ! c_size_t
+            integer(c_int) :: ierr
+            
+            ierr = zmq_getsockopt(skt%skt, int(option_, c_int), c_loc(optval_), int(optvallen_, c_size_t))
+            if (ierr /= 0) then 
+                print *, 'zmq_get', ierr, zmq_strerror(zmq_errno())
+                stop
+            end if
+        end subroutine skt_get
+        
+        subroutine skt_bind(skt, add)
+            class(socket_t), intent(in) :: skt
+            character(*), intent(in), target :: add
+            integer(c_int) :: ierr
+            ierr = zmq_bind(skt%skt, c_loc(add))
+            if (ierr /= 0) then 
+                print *, 'zmq_bind', ierr, zmq_strerror(zmq_errno())
+                stop
+            end if    
+        end subroutine skt_bind
+        
+        subroutine skt_connect(skt, add)
+            class(socket_t), intent(in) :: skt
+            character(*), intent(in), target :: add
+            integer(c_int) :: ierr
+            ierr = zmq_connect(skt%skt, c_loc(add))
+            if (ierr /= 0) then 
+                print *, 'zmq_connect', ierr, zmq_strerror(zmq_errno())
+                stop
+            end if    
+        end subroutine skt_connect
+        
+        subroutine skt_unbind(skt, add)
+            class(socket_t), intent(in) :: skt
+            character(*), intent(in), target :: add
+            integer(c_int) :: ierr
+            ierr = zmq_unbind(skt%skt, c_loc(add))
+            if (ierr /= 0) then 
+                print *, 'zmq_unbind', ierr, zmq_strerror(zmq_errno())
+                stop
+            end if    
+        end subroutine skt_unbind
+        
+        subroutine skt_disconnect(skt, add)
+            class(socket_t), intent(in) :: skt
+            character(*), intent(in), target :: add
+            integer(c_int) :: ierr
+            ierr = zmq_disconnect(skt%skt, c_loc(add))
+            if (ierr /= 0) then 
+                print *, 'zmq_disconnect', ierr, zmq_strerror(zmq_errno())
+                stop
+            end if    
+        end subroutine skt_disconnect
+        
+        subroutine skt_send(skt, buf_, len_, flags_, ierr)
+            class(socket_t), intent(in) :: skt
+            type(*), target :: buf_        
+            integer, intent(in) :: len_     ! c_size_t
+            integer, intent(in) :: flags_
+            integer, intent(out):: ierr
+            ierr = zmq_send(skt%skt, c_loc(buf_), int(len_, c_size_t), int(flags_, c_int))
+            if (ierr == -1) then 
+                print *, 'send', ierr, zmq_strerror(zmq_errno())
+            end if    
+        end subroutine skt_send       
+
+        subroutine skt_recv(skt, buf_, len_, flags_, ierr)
+            class(socket_t), intent(in) :: skt
+            type(*), target :: buf_        
+            integer, intent(in) :: len_     ! c_size_t
+            integer, intent(in) :: flags_
+            integer, intent(out) :: ierr
+            ierr = zmq_recv(skt%skt, c_loc(buf_), int(len_, c_size_t), int(flags_, c_int))
+            if (ierr == -1) then 
+                print *, 'recv', ierr, zmq_strerror(zmq_errno())
+            end if    
+        end subroutine skt_recv       
+
+        subroutine skt_monitor(skt, add, events, ierr)
+            class(socket_t), intent(in) :: skt
+            character(*), intent(in), target :: add
+            integer(c_int), intent(in) :: events
+            integer(c_int), intent(out) :: ierr
+            
+            ierr = zmq_socket_monitor(skt%skt, c_loc(add), events)
+            if (ierr == -1) then 
+                print *, 'monitor', ierr, zmq_strerror(zmq_errno())
+            end if    
+        end subroutine skt_monitor       
+
+
+        
         function zmq_strerror(ierrnum) result(res)
             integer(c_int), intent(in) :: ierrnum
             character(:), allocatable :: res
             type(c_ptr) :: cptr
             character(len = 512), pointer :: text
-            
+           
             cptr = zmq_strerror_c(ierrnum)
             call c_f_pointer(cptr, text)
             res = text(:index(text, achar(0)))
         end function zmq_strerror    
+  
+        function zmq_msg_gets(msg_, property_) result(res)
+            type(zmq_msg_t), intent(in) :: msg_
+            type(c_ptr)    , intent(in) :: property_        
+            character(:)   , allocatable  :: res
+            type(c_ptr) :: cptr
+            character(len = 512), pointer :: text
+            
+            cptr = zmq_msg_gets_c(msg_, property_)
+            call c_f_pointer(cptr, text)
+            res = text(:index(text, achar(0)))
+        end function zmq_msg_gets
+         
+        
+        
     end module f08_zmq
