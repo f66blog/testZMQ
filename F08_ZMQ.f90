@@ -1030,44 +1030,56 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             end if
         end subroutine skt_get
         
-        subroutine skt_bind(skt, add)
+        subroutine skt_bind(skt, addr)
             class(socket_t), intent(in) :: skt
-            character(*), intent(in), target :: add
+            character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_bind(skt%skt, c_loc(add))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_bind(skt%skt, c_loc(tmp))
             if (ierr /= 0) then 
                 print *, 'zmq_bind', ierr, zmq_strerror(zmq_errno())
                 stop
             end if    
         end subroutine skt_bind
         
-        subroutine skt_connect(skt, add)
+        subroutine skt_connect(skt, addr)
             class(socket_t), intent(in) :: skt
-            character(*), intent(in), target :: add
+            character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_connect(skt%skt, c_loc(add))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_connect(skt%skt, c_loc(tmp)) !? c_loc(addr) doesn't work correctly
             if (ierr /= 0) then 
                 print *, 'zmq_connect', ierr, zmq_strerror(zmq_errno())
                 stop
             end if    
         end subroutine skt_connect
         
-        subroutine skt_unbind(skt, add)
+        subroutine skt_unbind(skt, addr)
             class(socket_t), intent(in) :: skt
-            character(*), intent(in), target :: add
+            character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_unbind(skt%skt, c_loc(add))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_unbind(skt%skt, c_loc(tmp))
             if (ierr /= 0) then 
                 print *, 'zmq_unbind', ierr, zmq_strerror(zmq_errno())
                 stop
             end if    
         end subroutine skt_unbind
         
-        subroutine skt_disconnect(skt, add)
+        subroutine skt_disconnect(skt, addr)
             class(socket_t), intent(in) :: skt
-            character(*), intent(in), target :: add
+            character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_disconnect(skt%skt, c_loc(add))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_disconnect(skt%skt, c_loc(tmp))
             if (ierr /= 0) then 
                 print *, 'zmq_disconnect', ierr, zmq_strerror(zmq_errno())
                 stop
@@ -1080,6 +1092,7 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             integer, intent(in) :: len_     ! c_size_t
             integer, intent(in) :: flags_
             integer, intent(out):: ierr
+            
             ierr = zmq_send(skt%skt, c_loc(buf_), int(len_, c_size_t), int(flags_, c_int))
             if (ierr == -1) then 
                 print *, 'send', ierr, zmq_strerror(zmq_errno())
@@ -1092,19 +1105,19 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             integer, intent(in) :: len_     ! c_size_t
             integer, intent(in) :: flags_
             integer, intent(out) :: ierr
+            
             ierr = zmq_recv(skt%skt, c_loc(buf_), int(len_, c_size_t), int(flags_, c_int))
             if (ierr == -1) then 
                 print *, 'recv', ierr, zmq_strerror(zmq_errno())
             end if    
         end subroutine skt_recv       
 
-        subroutine skt_monitor(skt, add, events, ierr)
+        subroutine skt_monitor(skt, addr, events, ierr)
             class(socket_t), intent(in) :: skt
-            character(*), intent(in), target :: add
+            character(*), intent(in), target :: addr
             integer(c_int), intent(in) :: events
             integer(c_int), intent(out) :: ierr
-            
-            ierr = zmq_socket_monitor(skt%skt, c_loc(add), events)
+            ierr = zmq_socket_monitor(skt%skt, c_loc(addr), events)
             if (ierr == -1) then 
                 print *, 'monitor', ierr, zmq_strerror(zmq_errno())
             end if    

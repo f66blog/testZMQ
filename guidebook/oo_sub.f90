@@ -5,15 +5,16 @@ program sub
     character( 80), target :: filter 
     character(255), target :: buffer    
     integer(c_int) :: ilen
+
 block
     type(context_t) :: context
     type(socket_t) :: subscriber
     call context%new()
     call subscriber%new(context, ZMQ_SUB)
-    call subscriber%connect('tcp://localhost:5556'//achar(0))  ! zmq_bug?
+    call subscriber%connect('tcp://localhost:5556') 
     
     filter = '5'
-    call subscriber%set(ZMQ_SUBSCRIBE, filter, len_trim(filZZter))
+    call subscriber%set(ZMQ_SUBSCRIBE, filter, len_trim(filter))
 
     do
         print *, 'loop'

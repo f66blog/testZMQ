@@ -5,6 +5,7 @@ program pub
     character(20), target :: buffer    
     real :: x
     integer :: i, ix, ilen
+
 block
     type(context_t) :: context
     type(socket_t) ::  publisher
