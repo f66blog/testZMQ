@@ -3,7 +3,6 @@ program pub
     use :: f08_zmq
     implicit none
     type(c_ptr) :: context, publisher
-    character(:), allocatable, target :: txt 
     character(20), target :: buffer    
     integer(c_int) :: ierr
     real :: x
@@ -11,8 +10,7 @@ program pub
 
     context   = zmq_ctx_new()
     publisher = zmq_socket(context, ZMQ_PUB)
-    txt = 'tcp://*:5556'   !//a6char(0)
-    ierr = zmq_bind(publisher, c_loc(txt))
+    ierr = zmq_bind(publisher, 'tcp://*:5556')
     if (ierr /= 0) stop 'zmq_bind'
 
     do 
