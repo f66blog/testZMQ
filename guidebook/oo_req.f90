@@ -6,6 +6,7 @@ program req
     character(10), target :: buffer, word
     type(context_t) :: context
     type(socket_t) :: requester    
+
     call context%new()
     call requester%new(context, ZMQ_REQ)
     call requester%connect('tcp://localhost:5555')

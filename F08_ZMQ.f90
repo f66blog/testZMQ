@@ -1034,7 +1034,10 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             class(socket_t), intent(in) :: skt
             character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_bind(skt%skt, c_loc(addr))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_bind(skt%skt, c_loc(tmp))
             if (ierr /= 0) then 
                 print *, 'zmq_bind', ierr, zmq_strerror(zmq_errno())
                 stop
@@ -1046,8 +1049,9 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             character(*), intent(in), target :: addr
             integer(c_int) :: ierr
             character(:), allocatable, target :: tmp
+            
             tmp = addr
-            ierr = zmq_connect(skt%skt, c_loc(addr))
+            ierr = zmq_connect(skt%skt, c_loc(tmp)) !? c_loc(addr) doesn't work correctly
             if (ierr /= 0) then 
                 print *, 'zmq_connect', ierr, zmq_strerror(zmq_errno())
                 stop
@@ -1058,7 +1062,10 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             class(socket_t), intent(in) :: skt
             character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_unbind(skt%skt, c_loc(addr))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_unbind(skt%skt, c_loc(tmp))
             if (ierr /= 0) then 
                 print *, 'zmq_unbind', ierr, zmq_strerror(zmq_errno())
                 stop
@@ -1069,7 +1076,10 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             class(socket_t), intent(in) :: skt
             character(*), intent(in), target :: addr
             integer(c_int) :: ierr
-            ierr = zmq_disconnect(skt%skt, c_loc(addr))
+            character(:), allocatable, target :: tmp
+            
+            tmp = addr
+            ierr = zmq_disconnect(skt%skt, c_loc(tmp))
             if (ierr /= 0) then 
                 print *, 'zmq_disconnect', ierr, zmq_strerror(zmq_errno())
                 stop
@@ -1082,6 +1092,7 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             integer, intent(in) :: len_     ! c_size_t
             integer, intent(in) :: flags_
             integer, intent(out):: ierr
+            
             ierr = zmq_send(skt%skt, c_loc(buf_), int(len_, c_size_t), int(flags_, c_int))
             if (ierr == -1) then 
                 print *, 'send', ierr, zmq_strerror(zmq_errno())
@@ -1094,6 +1105,7 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             integer, intent(in) :: len_     ! c_size_t
             integer, intent(in) :: flags_
             integer, intent(out) :: ierr
+            
             ierr = zmq_recv(skt%skt, c_loc(buf_), int(len_, c_size_t), int(flags_, c_int))
             if (ierr == -1) then 
                 print *, 'recv', ierr, zmq_strerror(zmq_errno())
@@ -1105,7 +1117,6 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             character(*), intent(in), target :: addr
             integer(c_int), intent(in) :: events
             integer(c_int), intent(out) :: ierr
-            
             ierr = zmq_socket_monitor(skt%skt, c_loc(addr), events)
             if (ierr == -1) then 
                 print *, 'monitor', ierr, zmq_strerror(zmq_errno())

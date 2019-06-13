@@ -4,9 +4,9 @@ program rep
     implicit none
     integer :: ilen
     character(10), target :: buffer
-
     type(context_t):: context
     type(socket_t) :: responder
+
     call context%new()
     call responder%new(context, ZMQ_REP)
     call responder%bind('tcp://*:5555')

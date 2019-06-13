@@ -5,6 +5,7 @@ program sub
     character( 80), target :: filter 
     character(255), target :: buffer    
     integer(c_int) :: ilen
+
 block
     type(context_t) :: context
     type(socket_t) :: subscriber
