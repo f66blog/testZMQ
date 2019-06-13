@@ -14,6 +14,6 @@ program rep
         call responder%recv(buffer, 10, 0, ilen)
         print *, 'Received Hello'
         call sleep(1) ! non-standard POSIX
-        call responder%send('Wolrd', 5, 0, ilen)
+        call responder%send('World', 5, 0, ilen)
     end do
 end program rep
