@@ -5,6 +5,8 @@ program pull1
     integer :: ilen
     character(:), allocatable :: tmp
     character(255) :: buff
+    
+    block
     type(context_t) :: context
     type(socket_t) :: receiver, sender
 
@@ -27,4 +29,5 @@ program pull1
        end block
        call sender%send('', 0, 0, ilen) 
     end do
+    end block
 end program pull1

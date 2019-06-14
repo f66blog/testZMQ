@@ -4,6 +4,8 @@ program pull2
     implicit none
     integer :: ilen
     character(256), target :: buff
+
+    block
     type(context_t) :: context
     type(socket_t) :: receiver
 
@@ -24,4 +26,5 @@ program pull2
         end do 
         print *  
     end block
+    end block ! release context & socket
 end program pull2

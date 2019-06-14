@@ -26,9 +26,11 @@ program test
     use m_test
     implicit none
     integer :: id_size, iraw_size, ilen
-    type(context_t) :: ctx
-    type(socket_t) :: socket
     character(255), target :: id, raw
+
+    block
+    type(context_t) :: ctx
+    type(socket_t)  :: socket
 
     call ctx%new() 
     call socket%new(ctx, ZMQ_STREAM)
@@ -45,5 +47,6 @@ program test
         call socket%send(http_response, len(http_response), 0, ilen)
         call socket%send(id, id_size, ZMQ_SNDMORE, ilen)
         call socket%send('', 0, 0, ilen)
-     end do
+    end do
+    end block ! release ctx & socket
 end program test

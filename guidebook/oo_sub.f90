@@ -6,7 +6,7 @@ program sub
     character(255), target :: buffer    
     integer(c_int) :: ilen
 
-block
+    block
     type(context_t) :: context
     type(socket_t) :: subscriber
     call context%new()
@@ -21,5 +21,5 @@ block
         call subscriber%recv(buffer, 255, 0, ilen) 
         print *, buffer(:ilen)        
     end do
-end block
+    end block
 end program sub

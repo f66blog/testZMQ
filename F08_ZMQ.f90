@@ -999,7 +999,7 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
             integer(c_int) :: ierr
             
             ierr = zmq_close(skt%skt)
-            print *, 'zmq_close', ierr, zmq_strerror(zmq_errno())
+            print *, 'zmq_close      ', ierr, zmq_strerror(zmq_errno())
         end subroutine skt_close
         
         subroutine skt_set(skt, option_, optval_, optvallen_)

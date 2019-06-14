@@ -6,7 +6,7 @@ program pub
     real :: x
     integer :: i, ix, ilen
 
-block
+    block
     type(context_t) :: context
     type(socket_t) ::  publisher
 
@@ -22,5 +22,5 @@ block
         print *, 'pub:', buffer(:len_trim(buffer)), ':'
         call publisher%send(buffer, len_trim(buffer), 0, ilen)
     end do
-end block
+    end block ! release context & socket
 end program pub

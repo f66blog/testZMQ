@@ -4,6 +4,8 @@ program rep
     implicit none
     integer :: ilen
     character(10), target :: buffer
+
+    block
     type(context_t):: context
     type(socket_t) :: responder
 
@@ -16,4 +18,5 @@ program rep
         call sleep(1) ! non-standard POSIX
         call responder%send('World', 5, 0, ilen)
     end do
+    end block
 end program rep

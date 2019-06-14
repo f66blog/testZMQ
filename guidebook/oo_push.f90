@@ -3,6 +3,8 @@ program push
     use :: f08_zmq
     implicit none
     integer :: ilen
+
+    block
     type(context_t) :: context
     type(socket_t)  :: sender, sink
    
@@ -28,4 +30,5 @@ program push
              call sender%send(text, len(text), 0, ilen)
          end do
     end block
+    end block ! release context & sockets
 end program push
