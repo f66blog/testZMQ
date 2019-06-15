@@ -706,8 +706,8 @@ integer(c_int), parameter :: ZMQ_POLLPRI = 8
 !    short events;
 !    short revents;
 !} zmq_pollitem_t;
-type :: zmq_pollitem_t
-    integer(c_intptr_t) :: socket
+type, bind(c) :: zmq_pollitem_t 
+    type(c_ptr) :: socket
     integer(c_int) :: fd
     integer(c_short) :: events
     integer(c_short) :: revents
@@ -716,29 +716,59 @@ end type zmq_pollitem_t
 !#define ZMQ_POLLITEMS_DFLT 16
 integer(c_int), parameter :: ZMQ_POLLITEMS_DFLT = 16
 
-! TODO
 !ZMQ_EXPORT int zmq_poll (zmq_pollitem_t *items_, int nitems_, long timeout_);    
-
+!???
+interface
+    integer(c_int) function zmq_poll(items_, nitems_, timeout_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: items_
+        integer(c_int) , value :: nitems_
+        integer(c_long), value :: timeout_
+    end function zmq_poll
+    end interface
 !/******************************************************************************/
 !/*  Message proxying                                                          */
 !/******************************************************************************/
 !
-! TODO
 !ZMQ_EXPORT int zmq_proxy (void *frontend_, void *backend_, void *capture_);
 !ZMQ_EXPORT int zmq_proxy_steerable (void *frontend_,
 !                                    void *backend_,
 !                                    void *capture_,
 !                                    void *control_);
+!??? nocheck
+! TODO
+interface
+    integer(c_int) function zmq_proxy(frontend_, backend_, capture_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: frontend_
+        type(c_ptr), value :: backend_
+        type(c_ptr), value :: capture_
+    end function zmq_proxy
     
+    integer(c_int) function zmq_proxy_steerable(frontend_, backend_, capture_, control_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: frontend_
+        type(c_ptr), value :: backend_
+        type(c_ptr), value :: capture_
+        type(c_ptr), value :: control_ 
+    end function zmq_proxy_steerable
+end interface    
 !/******************************************************************************/
 !/*  Probe library capabilities                                                */
 !/******************************************************************************/
 !
 !#define ZMQ_HAS_CAPABILITIES 1
-!#define ZMQ_HAS_CAPABILITIES 1
+integer(c_int), parameter :: ZMQ_HAS_CAPABILITIES = 1
 
 ! TODO
-!ZMQ_EXPORT int zmq_has (const char *capability_);
+! ????
+!ZMQ_EXPORT int zmq_has(const char *capability_);
+interface
+    integer(c_int) function zmq_has(capability_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: capability_
+    end function zmq_has
+end interface
 
 !/*  Deprecated aliases */
 !#define ZMQ_STREAMER 1
@@ -753,6 +783,28 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !ZMQ_EXPORT int zmq_device (int type_, void *frontend_, void *backend_);
 !ZMQ_EXPORT int zmq_sendmsg (void *s_, zmq_msg_t *msg_, int flags_);
 !ZMQ_EXPORT int zmq_recvmsg (void *s_, zmq_msg_t *msg_, int flags_);
+interface 
+    integer(c_int) function zmq_device(type_, frontend_, backend_) bind(c)
+        use, intrinsic :: iso_c_binding
+        integer(c_int), value :: type_
+        type(c_ptr), value :: frontend_
+        type(c_ptr), value :: backend_
+    end function zmq_device
+    
+    integer(c_int) function zmq_sendmsg(s_, msg_, flags_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: s_
+        type(c_ptr), value :: msg_
+        integer(c_int), value :: flags_
+    end function zmq_sendmsg
+    
+    integer(c_int) function zmq_recvmsg(s_, msg_, flags_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: s_
+        type(c_ptr), value :: msg_
+        integer(c_int), value :: flags_
+    end function zmq_recvmsg
+end interface
 !
 ! TODO
 !struct iovec;
@@ -760,12 +812,27 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !zmq_sendiov (void *s_, struct iovec *iov_, size_t count_, int flags_);
 !ZMQ_EXPORT int
 !zmq_recviov (void *s_, struct iovec *iov_, size_t *count_, int flags_);
-    
+interface
+    integer function zmq_sendiov(s_, iov_, count_, flags_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: s_
+        type(c_ptr), value :: iov_
+        integer(c_size_t), value :: count_
+        integer(c_int)   , value :: flags_
+    end function zmq_sendiov
+
+    integer function zmq_recviov(s_, iov_, count_, flags_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: s_
+        type(c_ptr), value :: iov_
+        integer(c_size_t) :: count_        ! intent(out)
+        integer(c_int)   , value :: flags_
+    end function zmq_recviov
+    end interface
 !/******************************************************************************/
 !/*  Encryption functions                                                      */
 !/******************************************************************************/
 !
-! TODO
 !
 !/*  Encode data with Z85 encoding. Returns encoded data                       */
 !ZMQ_EXPORT char *
@@ -782,6 +849,35 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !/*  Returns 0 on success.                                                     */
 !ZMQ_EXPORT int zmq_curve_public (char *z85_public_key_,
 !                                 const char *z85_secret_key_);
+! TODO
+! ???nocheck    
+interface
+    type(c_ptr) function zmq_z85_encode(dest_, data_, size_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: dest_
+        integer(c_int8_t) :: data_ ! intent(in) 
+        integer(c_size_t), value :: size_
+    end function zmq_z85_encode
+   
+    integer(c_int8_t) function zmq_z85_decode(dest_, string_) bind(c)
+        use, intrinsic :: iso_c_binding
+        integer(c_int8_t), value :: dest_ 
+        type(c_ptr), value :: string_
+    end function zmq_z85_decode
+
+    integer(c_int) function zmq_curve_keypair(z85_public_key_, z85_secret_key_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: z85_public_key_
+        type(c_ptr), value :: z85_secret_key_
+    end function zmq_curve_keypair
+
+    integer(c_int) function zmq_curve_public(z85_public_key_, z85_secret_key_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: z85_public_key_
+        type(c_ptr), value :: z85_secret_key_
+    end function zmq_curve_public
+    end interface
+    
 !/******************************************************************************/
 !/*  Atomic utility methods                                                    */
 !/******************************************************************************/
@@ -793,6 +889,39 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !ZMQ_EXPORT int zmq_atomic_counter_value (void *counter_);
 !ZMQ_EXPORT void zmq_atomic_counter_destroy (void **counter_p_);
 !
+! TODO
+! ???nocheck    
+interface
+    subroutine zmq_atomic_counter_new() bind(c)
+        use, intrinsic :: iso_c_binding
+    end subroutine zmq_atomic_counter_new
+    
+    subroutine zmq_atomic_counter_set(counter_, value_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: counter_
+        integer(c_int), value :: value_
+    end subroutine zmq_atomic_counter_set
+
+    integer(c_int) function zmq_atomic_counter_inc(counter_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: counter_
+    end function zmq_atomic_counter_inc
+    
+    integer(c_int) function zmq_atomic_counter_dec(counter_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: counter_
+    end function zmq_atomic_counter_dec
+    
+    integer(c_int) function zmq_atomic_counter_value(counter_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: counter_
+    end function zmq_atomic_counter_value
+    
+    subroutine zmq_atomic_counter_destroy(counter_p_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: counter_p_
+    end subroutine zmq_atomic_counter_destroy
+    end interface
 !/******************************************************************************/
 !/*  Scheduling timers                                                         */
 !/******************************************************************************/
@@ -802,6 +931,13 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !#define ZMQ_HAVE_TIMERS
 !
 !typedef void(zmq_timer_fn) (int timer_id, void *arg);
+abstract interface
+    subroutine zmq_timer_fn(timer_id, arg) bind(c) 
+        use, intrinsic :: iso_c_binding
+        integer(c_int), value :: timer_id
+        type(c_ptr), value :: arg
+    end subroutine zmq_timer_fn
+end interface    
 !
 !ZMQ_EXPORT void *zmq_timers_new (void);
 !ZMQ_EXPORT int zmq_timers_destroy (void **timers_p);
@@ -813,9 +949,53 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !ZMQ_EXPORT int zmq_timers_reset (void *timers, int timer_id);
 !ZMQ_EXPORT long zmq_timers_timeout (void *timers);
 !ZMQ_EXPORT int zmq_timers_execute (void *timers);
+interface 
+    subroutine zmq_timers_new() bind(c)
+        use, intrinsic :: iso_c_binding
+    end subroutine zmq_timers_new
+    
+    integer(c_int) function zmq_timers_destroy(timers_p) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers_p
+    end function zmq_timers_destroy    
+    
+    integer(c_int) function zmq_timers_add(timers, interval, handler, arg) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers
+        integer(c_size_t), value :: interval
+        type(c_ptr), value :: handler ! procedure(zmq_timer_fn) pointer
+        type(c_ptr), value :: arg
+    end function zmq_timers_add
 
+    integer(c_int) function zmq_timers_cancel(timers, timer_id) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers
+        integer(c_int), value :: timer_id    
+    end function zmq_timers_cancel
+    
+    integer(c_int) function zmq_timers_set_interval(timers, timer_id, interval) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers
+        integer(c_int), value :: timer_id    
+        integer(c_size_t), value :: interval 
+    end function zmq_timers_set_interval
 
+    integer(c_int) function zmq_timers_reset(timers, timer_id) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers
+        integer(c_int), value :: timer_id    
+    end function zmq_timers_reset
+    
+    integer(c_long) function zmq_timers_timeout(timers) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers
+    end function zmq_timers_timeout
 
+    integer(c_int) function zmq_timers_execute(timers) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: timers
+    end function zmq_timers_execute
+    end interface
 !
 !/******************************************************************************/
 !/*  These functions are not documented by man pages -- use at your own risk.  */
@@ -848,6 +1028,43 @@ integer(c_int), parameter :: ZMQ_QUEUE     = 3
 !/* Wait for thread to complete then free up resources.                        */
 !ZMQ_EXPORT void zmq_threadclose (void *thread_);
 !
+abstract interface
+    subroutine zmq_thread_fn() bind(c)
+        use, intrinsic :: iso_c_binding
+    end subroutine zmq_thread_fn 
+end interface
+    
+interface
+    type(c_ptr) function zmq_stopwatch_start() bind(c)
+        use, intrinsic :: iso_c_binding
+    end function zmq_stopwatch_start
+    
+    integer(c_long) function zmq_stopwatch_intermediate(watch_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: watch_    
+    end function zmq_stopwatch_intermediate
+
+    integer(c_long) function zmq_stopwatch_stop(watch_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: watch_    
+    end function zmq_stopwatch_stop
+
+    subroutine zmq_sleep(seconds_) bind(c)
+        use, intrinsic :: iso_c_binding
+        integer(c_int), value :: seconds_    
+    end subroutine zmq_sleep
+
+    subroutine zmq_threadstart(func_, arg_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: func_ ! procedure(zmq_thread_fn) 
+        type(c_ptr), value :: arg_
+    end subroutine zmq_threadstart
+    
+    subroutine zmq_threadclose(thread_) bind(c)
+        use, intrinsic :: iso_c_binding
+        type(c_ptr) :: thread_    
+    end subroutine zmq_threadclose
+end interface    
 !/******************************************************************************/
 !/*  These functions are DRAFT and disabled in stable releases, and subject to */
 !/*  change at ANY time until declared stable.                                 */
