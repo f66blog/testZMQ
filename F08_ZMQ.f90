@@ -995,7 +995,7 @@ interface
         use, intrinsic :: iso_c_binding
         type(c_ptr), value :: timers
     end function zmq_timers_execute
-    end interface
+end interface
 !
 !/******************************************************************************/
 !/*  These functions are not documented by man pages -- use at your own risk.  */
@@ -1029,11 +1029,13 @@ interface
 !ZMQ_EXPORT void zmq_threadclose (void *thread_);
 !
 abstract interface
-    subroutine zmq_thread_fn() bind(c)
+    subroutine zmq_thread_fn(arg_) bind(c)
         use, intrinsic :: iso_c_binding
+        type(c_ptr), value :: arg_ 
     end subroutine zmq_thread_fn 
 end interface
     
+! not working for ifort    
 interface
     type(c_ptr) function zmq_stopwatch_start() bind(c)
         use, intrinsic :: iso_c_binding
@@ -1044,7 +1046,7 @@ interface
         type(c_ptr), value :: watch_    
     end function zmq_stopwatch_intermediate
 
-    integer(c_long) function zmq_stopwatch_stop(watch_) bind(c)
+    integer(c_long) function zmq_stopwatch_stop(watch_) bind(c) 
         use, intrinsic :: iso_c_binding
         type(c_ptr), value :: watch_    
     end function zmq_stopwatch_stop
@@ -1054,15 +1056,15 @@ interface
         integer(c_int), value :: seconds_    
     end subroutine zmq_sleep
 
-    subroutine zmq_threadstart(func_, arg_) bind(c)
+    type(c_ptr) function zmq_threadstart(func_, arg_) bind(c)
         use, intrinsic :: iso_c_binding
-        type(c_ptr), value :: func_ ! procedure(zmq_thread_fn) 
+        type(c_funptr), value :: func_ ! procedure(zmq_thread_fn) 
         type(c_ptr), value :: arg_
-    end subroutine zmq_threadstart
+    end function zmq_threadstart
     
     subroutine zmq_threadclose(thread_) bind(c)
         use, intrinsic :: iso_c_binding
-        type(c_ptr) :: thread_    
+        type(c_ptr), value :: thread_    
     end subroutine zmq_threadclose
 end interface    
 !/******************************************************************************/
