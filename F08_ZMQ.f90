@@ -950,9 +950,9 @@ end interface
 !ZMQ_EXPORT long zmq_timers_timeout (void *timers);
 !ZMQ_EXPORT int zmq_timers_execute (void *timers);
 interface 
-    subroutine zmq_timers_new() bind(c)
+    type(c_ptr) function zmq_timers_new() bind(c)
         use, intrinsic :: iso_c_binding
-    end subroutine zmq_timers_new
+    end function zmq_timers_new
     
     integer(c_int) function zmq_timers_destroy(timers_p) bind(c)
         use, intrinsic :: iso_c_binding
@@ -963,7 +963,7 @@ interface
         use, intrinsic :: iso_c_binding
         type(c_ptr), value :: timers
         integer(c_size_t), value :: interval
-        type(c_ptr), value :: handler ! procedure(zmq_timer_fn) pointer
+        type(c_funptr), value :: handler ! procedure(zmq_timer_fn) pointer
         type(c_ptr), value :: arg
     end function zmq_timers_add
 

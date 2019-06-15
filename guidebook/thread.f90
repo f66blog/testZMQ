@@ -12,9 +12,7 @@ contains
             print *, 'thread', i
         end do
     end subroutine test
-
 end module m_sub
-
 
 program thread
     use :: m_zmq
