@@ -6,21 +6,21 @@ program pub
     real :: x
     integer :: i, ix, ilen
 
-    block
-    type(context_t) :: context
-    type(socket_t) ::  publisher
+    type(context_t), allocatable :: context
+    type(socket_t) , allocatable :: publisher
+    allocate(context, publisher)
 
     call context%new()
     call publisher%new(context, ZMQ_PUB)
     call publisher%bind('tcp://*:5556')
-
-
-    do i = 1, 1000
+    do i = 1, 10000
         call random_number(x)
         ix = 1000000000 * x
         write(buffer, '(g0)') ix !, achar(0)
         print *, 'pub:', buffer(:len_trim(buffer)), ':'
         call publisher%send(buffer, len_trim(buffer), 0, ilen)
     end do
-    end block ! release context & socket
+
+    deallocate(publisher)
+    deallocate(context)
 end program pub

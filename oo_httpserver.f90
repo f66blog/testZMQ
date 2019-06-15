@@ -27,11 +27,10 @@ program test
     implicit none
     integer :: id_size, iraw_size, ilen
     character(255), target :: id, raw
+    type(context_t), allocatable :: ctx
+    type(socket_t) , allocatable :: socket
 
-    block
-    type(context_t) :: ctx
-    type(socket_t)  :: socket
-
+    allocate(ctx, socket)
     call ctx%new() 
     call socket%new(ctx, ZMQ_STREAM)
     call socket%bind('tcp://*:8080')
@@ -48,5 +47,6 @@ program test
         call socket%send(id, id_size, ZMQ_SNDMORE, ilen)
         call socket%send('', 0, 0, ilen)
     end do
-    end block ! release ctx & socket
+    deallocate(socket)
+    deallocate(ctx)
 end program test

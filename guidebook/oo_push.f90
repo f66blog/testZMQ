@@ -4,9 +4,10 @@ program push
     implicit none
     integer :: ilen
 
-    block
-    type(context_t) :: context
-    type(socket_t)  :: sender, sink
+    type(context_t), allocatable :: context
+    type(socket_t) , allocatable :: sender, sink
+    allocate(context)
+    allocate(sender, sink)
    
     call context%new()
     call sender%new(context, ZMQ_PUSH)
@@ -30,5 +31,7 @@ program push
              call sender%send(text, len(text), 0, ilen)
          end do
     end block
-    end block ! release context & sockets
+
+    deallocate(sender, sink)
+    deallocate(context)
 end program push

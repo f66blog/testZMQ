@@ -6,9 +6,9 @@ program pull1
     character(:), allocatable :: tmp
     character(255) :: buff
     
-    block
-    type(context_t) :: context
-    type(socket_t) :: receiver, sender
+    type(context_t), allocatable :: context
+    type(socket_t) , allocatable :: receiver, sender
+    allocate(context, receiver, sender)
 
     call context%new()
     call receiver%new(context, ZMQ_PULL)
@@ -29,5 +29,7 @@ program pull1
        end block
        call sender%send('', 0, 0, ilen) 
     end do
-    end block
+
+    deallocate(receiver, sender)
+    deallocate(context) 
 end program pull1

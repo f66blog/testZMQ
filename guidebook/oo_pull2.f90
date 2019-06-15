@@ -1,13 +1,14 @@
 program pull2
     use, intrinsic :: iso_c_binding
+    use, intrinsic :: iso_fortran_env
     use :: f08_zmq
     implicit none
     integer :: ilen
     character(256), target :: buff
 
-    block
-    type(context_t) :: context
-    type(socket_t) :: receiver
+    type(context_t), allocatable :: context
+    type(socket_t) , allocatable :: receiver
+    allocate(context, receiver)
 
     call context%new()
     call receiver%new(context, ZMQ_PULL)
@@ -19,12 +20,14 @@ program pull2
             call receiver%recv(buff, len(buff), 0, ilen)
             if (mod(itask, 10) == 0) then 
                 write(*, '(g0)', advance = 'no') ':'
-                call flush()
+                flush(output_unit)
             else 
                 write(*, '(g0)', advance = 'no') '.'
             end if
         end do 
         print *  
     end block
-    end block ! release context & socket
+
+    deallocate(receiver)
+    deallocate(context)
 end program pull2
