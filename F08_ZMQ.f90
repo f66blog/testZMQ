@@ -316,11 +316,11 @@ end type zmq_msg_t
             use, intrinsic :: iso_c_binding
             import zmq_msg_t, zmq_free_fn
             type(zmq_msg_t) :: msg_
-         !   integer(8), allocatable :: data_(:) ! O
+                                     !   integer(8), allocatable :: data_(:) ! O
             type(c_ptr), value :: data_         ! X
             integer(c_size_t), value :: size_
-          !  type(c_funptr), value :: ffn_   
-            procedure(zmq_free_fn) :: ffn_  
+            type(c_funptr), value :: ffn_   
+          !  procedure(zmq_free_fn) :: ffn_  
             type(c_ptr), value :: hint_
         end function zmq_msg_init_data
         
@@ -855,13 +855,13 @@ interface
     type(c_ptr) function zmq_z85_encode(dest_, data_, size_) bind(c)
         use, intrinsic :: iso_c_binding
         type(c_ptr), value :: dest_
-        integer(c_int8_t) :: data_ ! intent(in) 
+        type(c_ptr) :: data_ ! intent(in) 
         integer(c_size_t), value :: size_
     end function zmq_z85_encode
    
-    integer(c_int8_t) function zmq_z85_decode(dest_, string_) bind(c)
+    type(c_ptr) function zmq_z85_decode(dest_, string_) bind(c)
         use, intrinsic :: iso_c_binding
-        integer(c_int8_t), value :: dest_ 
+        type(c_ptr), value :: dest_ 
         type(c_ptr), value :: string_
     end function zmq_z85_decode
 
@@ -892,9 +892,9 @@ interface
 ! TODO
 ! ???nocheck    
 interface
-    subroutine zmq_atomic_counter_new() bind(c)
+    type(c_ptr) function zmq_atomic_counter_new() bind(c)
         use, intrinsic :: iso_c_binding
-    end subroutine zmq_atomic_counter_new
+    end function zmq_atomic_counter_new
     
     subroutine zmq_atomic_counter_set(counter_, value_) bind(c)
         use, intrinsic :: iso_c_binding
